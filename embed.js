@@ -51,6 +51,14 @@
             }
           }
         });
+      },
+      filterByLanguage: function(language) {
+        var models = this.filter(function(model) {
+          if(model.get('how')['language'] && model.get('how')['language'] == language) {
+            return model;
+          }
+        });
+        return models;
       }
     });
 
@@ -61,22 +69,18 @@
 
     render: function(model) {
       // based on the type of element, render the annotation.
-      console.log(model);
+//      console.log(model);
     }
   });
 
-  // new AlipiView({collection: new Sweets({"what": "re-narration",
-  //                                        "where": window.location.href,
-  //                                        success: function(data) {
-  //                                          this.add(data);
-  //                                        }
-  //                                       })});
-
-  var Renarrations = new Sweets();
+  window.Renarrations = new Sweets();
   Renarrations.getAll({"what": "re-narration",
                        "where": window.location.href,
                        "success": function(data) {
+
                          new AlipiView({collection: Renarrations});
                          Renarrations.add(data);
+                         //                         new AppView()
                        }});
+
 })();
