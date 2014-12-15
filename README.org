@@ -2,10 +2,15 @@ A widget to get re-narrations for the site that the widget is added in.
 Add `embed.js` to the page in which the widget has to be activated.
 
 Dependencies:
+
 underscore.js [0]
+
 backbone.js [1]
+
 jquery [2]
 
 [0] : http://underscorejs.org/underscore-min.js
+
 [1] : http://backbonejs.org/backbone-min.js
+
 [2] : http://code.jquery.com/jquery-1.11.0.min.js
