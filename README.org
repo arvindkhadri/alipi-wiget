@@ -1,5 +1,23 @@
 A widget to get re-narrations for the site that the widget is added in.
-Add `embed.js` to the page in which the widget has to be activated.
+Add *embed.js* to the page in which the widget has to be activated.
+
+AlipiWidgetView, when instantiated gets the language choices of available
+re-narrations.
+
+Populate the Renarrations collection by making a call like
+
+Renarrations.getAll({"what": <choice of language>,
+                       "where": encodeURIComponent(window.location.href),
+                       "success": function(data) {
+                         _.each(data['r'], function(item) {
+                           _.each(item['narration'], function(narration) {
+                             Renarrations.add(narration);
+                           });
+                         });
+                       }});
+
+Renarrate() accepts a collection of swts as argument, and iterates over the
+collection to replace relevant DOM objects.
 
 Dependencies:
 
