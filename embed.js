@@ -112,56 +112,62 @@
                          });
                        }});
    */
-  var evalAndReplace = function(swt) {
-    try{
-	    var nodes = document.evaluate(swt.get['xpath'], document, null, XPathResult.ANY_TYPE,null);
 
-		}
-		catch(e)
-		{
-	    console.log(e);
-		}
-    try{
-			var result = nodes.iterateNext();
-			while (result)
-			{
-				if (swt['elementtype'] == 'image')
-				{
-					if(swt['data'] != '')
-					{
-						result.setAttribute('src',swt.get('data').split(',')[1]);  //A hack to display images properly, the size has been saved in the database.
-						width = swt.get('data').split(',')[0].split('x')[0];
-						height = swt.get('data').split(',')[0].split('x')[1];
-						result.setAttribute('width',width);
-						result.setAttribute('height', height);
-						result.setAttribute('class','blink');
-					}
-					else
-						$(result).hide();
+  var evalAndReplace = function(swt) {
+    try {
+      var nodes = document.evaluate(swt.get('xpath'), document, null,
+                                    XPathResult.ANY_TYPE, null);
+    }
+    catch(e) {
+      console.log(e);
+    }
+    try {
+      var result = nodes.iterateNext();
+      while(result) {
+        if(swt.get('elementtype') == 'image') {
+          if(swt.get('data') != '') {
+
+            // A hack to display images properly, the size has been saved in the database.
+            result.setAttribute('src', swt.get('data').split(',')[1]);
+            width = swt.get('data').split(',')[0].split('x')[0];
+            height = swt.get('data').split(',')[0].split('x')[1];
+            result.setAttribute('width',width);
+            result.setAttribute('height', height);
+            result.setAttribute('class','blink');
+          }
+          else {
+            $(result).hide();
+          }
         }
-				else if(swt['elementtype'] == 'audio/ogg')
-				{
-					swt.get('data') = decodeURIComponent(swt.get('data'));
-					audio = '<audio controls="controls" src="'+swt.get('data')+'" style="display:table;"></audio>';
-					$(result).before(audio);
-					result.setAttribute('class','blink');
-				}
-        else{
-					result.innerHTML = swt.get('data');
-					result.setAttribute('class','blink');
+        else if(swt.get('elementtype') == 'audio/ogg') {
+          //swt.get('data') = decodeURIComponent(swt.get('data'));
+          var data = decodeURIComponent(swt.get('data'));
+          var audio = '<audio controls="controls" src="' + data +
+            '" style="display: table;"></audio>';
+
+          $(result).before(audio);
+          result.setAttribute('class','blink');
+        }
+        else {
+          result.innerHTML = swt.get('data');
+          //result.setAttribute('class','blink');
         }
         result=nodes.iterateNext();
-			}
+      }
     }
-    catch (e)
-    {
-			//            dump( 'error: Document tree modified during iteration ' + e );
+    catch (e) {
+      //console.log(e);
+      // dump('error: Document tree modified during iteration ' + e );
     }
 
   };
+
   Renarrate = function(swts) {
-    if(swts.length <= 0) {
+    if(!swts) {
       throw Error("No swts were passed as argument to the function!");
+    }
+    if(swts.length <= 0) {
+      console.log('No renarrations available!');
     }
     swts.each(evalAndReplace);
   };
