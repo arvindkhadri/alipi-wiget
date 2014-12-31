@@ -101,6 +101,7 @@
                          });
                        }});
    */
+
   var evalAndReplace = function(swt) {
     try{
 	    var nodes = document.evaluate(swt.get('xpath'), document,
@@ -139,7 +140,7 @@
 					result.innerHTML = swt.get('data');
         }
         result=nodes.iterateNext();
-			}
+      }
     }
     catch (e)
     {
@@ -147,9 +148,13 @@
     }
 
   };
+
   Renarrate = function(swts) {
-    if(swts.length <= 0) {
+    if(!swts) {
       throw Error("No swts were passed as argument to the function!");
+    }
+    if(swts.length <= 0) {
+      console.log('No renarrations available!');
     }
     swts.each(evalAndReplace);
   };
@@ -166,5 +171,5 @@
                         }});
     }
   });
-  AWV = new AlipiWidgetView;
+  //AWV = new AlipiWidgetView;
 })();
