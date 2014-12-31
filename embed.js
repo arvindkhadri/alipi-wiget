@@ -1,15 +1,9 @@
 (function() {
-  // var Sweet = Backbone.Model.extend({
-  //   defaults: {
-  //     'who': '',
-  //     'what': 're-narration',
-  //     'where': '',
-  //     'how': {}
-  //   },
-  //   initialize: function() {
-  //   }
-  // });
+  var $ = require('jquery');
+  var Backbone = require('backbone');
+  var _ = require('underscore');
 
+  Backbone.$ = $; // Set this, or else Backbone.$ is not found.
 
   var Sweets = Backbone.Collection.extend({
     // initialize: function(options) {
@@ -31,7 +25,8 @@
           what = options.what;
       var who = options.who || null;
 
-      var url = "http://y.a11y.in/web/replace?lang=" + what + "&url=" + where + "&type=re-narration";
+      var url = "http://y.a11y.in/web/replace?lang=" + what +
+            "&url=" + where + "&type=re-narration";
 
       if(who) {
         url += '&who=' + who;
@@ -67,9 +62,6 @@
   });
 
     var Languages = Backbone.Collection.extend({
-    // initialize: function(options) {
-    //   this.getAll(options);
-    // },
     getAll: function(options) {
       // error checking
       if(!options.where) {
@@ -80,9 +72,6 @@
       var where = options.where;
       var url = "http://y.a11y.in/web/menu?&url=" + where;
 
-      // if(who) {
-      //   url += '&who=' + who;
-      // }
       // get them!
       this.sync('read', this, {
         url: url,
@@ -114,7 +103,8 @@
    */
   var evalAndReplace = function(swt) {
     try{
-	    var nodes = document.evaluate(swt.get['xpath'], document, null, XPathResult.ANY_TYPE,null);
+	    var nodes = document.evaluate(swt.get('xpath'), document,
+                                    null, XPathResult.ANY_TYPE,null);
 
 		}
 		catch(e)
@@ -125,37 +115,35 @@
 			var result = nodes.iterateNext();
 			while (result)
 			{
-				if (swt['elementtype'] == 'image')
+				if (swt.get('elementtype') == 'image')
 				{
-					if(swt['data'] != '')
+					if(swt.get('data') != '')
 					{
-						result.setAttribute('src',swt.get('data').split(',')[1]);  //A hack to display images properly, the size has been saved in the database.
-						width = swt.get('data').split(',')[0].split('x')[0];
-						height = swt.get('data').split(',')[0].split('x')[1];
+						result.setAttribute('src',swt.get('data').split(',')[1]);
+						var width = swt.get('data').split(',')[0].split('x')[0];
+						var height = swt.get('data').split(',')[0].split('x')[1];
 						result.setAttribute('width',width);
 						result.setAttribute('height', height);
-						result.setAttribute('class','blink');
 					}
 					else
 						$(result).hide();
         }
-				else if(swt['elementtype'] == 'audio/ogg')
+				else if(swt.get('elementtype') == 'audio/ogg')
 				{
-					swt.get('data') = decodeURIComponent(swt.get('data'));
-					audio = '<audio controls="controls" src="'+swt.get('data')+'" style="display:table;"></audio>';
+					var data = decodeURIComponent(swt.get('data'));
+					var audio = '<audio controls="controls" src="'+
+                data +'" style="display:table;"></audio>';
 					$(result).before(audio);
-					result.setAttribute('class','blink');
 				}
         else{
 					result.innerHTML = swt.get('data');
-					result.setAttribute('class','blink');
         }
         result=nodes.iterateNext();
 			}
     }
     catch (e)
     {
-			//            dump( 'error: Document tree modified during iteration ' + e );
+			// throw Error( 'error: Document tree modified during iteration ' + e );
     }
 
   };
@@ -178,5 +166,5 @@
                         }});
     }
   });
-//  AWV = new AlipiWidgetView;
+  AWV = new AlipiWidgetView;
 })();
